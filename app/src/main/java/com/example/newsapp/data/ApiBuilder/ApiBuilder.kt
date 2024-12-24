@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object ApiBuilder {
     fun retrofitObject(): ApiService {
         val retrofit = Retrofit.Builder()
-            .client(OkHttpClient().Builder().build())
+            .client(OkHttpClient().newBuilder().build())
             .baseUrl("https://newsapi.org/v2/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
