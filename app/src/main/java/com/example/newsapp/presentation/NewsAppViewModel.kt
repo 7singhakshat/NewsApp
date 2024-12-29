@@ -1,24 +1,60 @@
 package com.example.newsapp.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.newsapp.NewRepo
 import com.example.newsapp.data.ApiBuilder.ApiBuilder
 import com.example.newsapp.data.model.ApiResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-class NewsAppViewModel : ViewModel(){
-    val apiInstance= ApiBuilder.retrofitObject()
+class NewsAppViewModel : ViewModel() {
+    val repo = NewRepo()
     private val _state = MutableStateFlow(AppState())
-    private val state= _state.asStateFlow()
+    val state = _state.asStateFlow()
 
-    fun getHeadLine(){
-        _state.value= AppState(loading = true)
+
+    init {
+        getHeadLine()
+    }
+
+    fun getHeadLine(country: String = "us") {
+        viewModelScope.launch {
+            repo.getHeadLine(country).collectLatest {
+                if (it.loading == true) {
+                    _state.value = AppState(loading = true)
+                } else if (it.error.isNullOrBlank().not()) {
+                    _state.value = AppState(error = it.error)
+                } else {
+                    _state.value = AppState(data = it.data, loading = false)
+                }
+
+            }
+        }
+
+    }
+
+
+    fun getEverything(q: String = "us") {
+        viewModelScope.launch {
+            repo.getEverything(q).collectLatest {
+                if (it.loading == true) {
+                    _state.value = AppState(loading = true)
+                } else if (it.error.isNullOrBlank().not()) {
+                    _state.value = AppState(error = it.error)
+                } else {
+                    _state.value = AppState(data = it.data, loading = false)
+                }
+
+            }
+        }
 
     }
 }
-
 data class AppState(
-    var loading : Boolean? = false,
-    var error : String? = "",
-    var data : ApiResponse?= null
+    var loading: Boolean? = false,
+    var error: String? = "",
+    var data: ApiResponse? = null
 )

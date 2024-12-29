@@ -7,12 +7,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiBuilder {
     fun retrofitObject(): ApiService {
-        val retrofit = Retrofit.Builder()
-            .client(OkHttpClient().newBuilder().build())
+        return Retrofit.Builder()
+            .client(OkHttpClient.Builder().build())
             .baseUrl("https://newsapi.org/v2/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ApiService::class.java)
-        return retrofit
+
     }
 }
