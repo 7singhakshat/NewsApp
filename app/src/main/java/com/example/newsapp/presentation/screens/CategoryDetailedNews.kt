@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -74,15 +75,19 @@ Scaffold(
             )
 
         )
-        Spacer(modifier = modifier.height(24.dp))
+        Spacer(modifier = modifier.height(15.dp))
         AsyncImage(
             model= article.urlToImage,
             contentDescription=null,
             modifier=modifier.size(300.dp)
 
         )
+        Spacer(modifier=modifier.height(15.dp))
+        LazyColumn { item { Text(text = article.content.toString()) } }
+            }
+
+
     }
 }
 
 
-}
