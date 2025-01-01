@@ -10,3 +10,8 @@ data class Article(
     val url: String?=null,
     val urlToImage: String?=null
 )
+fun test(){
+
+}
+
+

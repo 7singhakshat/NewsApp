@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
@@ -33,6 +34,7 @@ import com.example.newsapp.R
 import com.example.newsapp.presentation.NewsAppViewModel
 import com.example.newsapp.presentation.navigation.Routes.CategoryScreen
 
+//@Preview(showSystemUi = true)
 @Composable
 fun HomeScreenUI(
     modifier: Modifier = Modifier,
@@ -55,10 +57,10 @@ fun HomeScreenUI(
         Column (modifier=Modifier.fillMaxSize()){ Row {
             OutlinedTextField(value = searchTerm.value, onValueChange = {
                 searchTerm.value = it
-            })
+            }, placeholder = {Text(text = "Search")})
             IconButton(onClick = {
                 viewModel.getEverything(q = searchTerm.value)
-            }) {
+            }, enabled = searchTerm.value.isNullOrBlank().not()) {
                 Icon(imageVector = Icons.Default.Search, contentDescription = null)
             }
 
@@ -76,7 +78,20 @@ fun HomeScreenUI(
                         Card(modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentHeight()
-                            .padding(8.dp)) {
+                            .padding(8.dp).clickable {
+                                navController.navigate(CategoryScreen(
+                                    author = article.author,
+                                    content = article.content,
+                                    description = article.description,
+                                    publishedAt = article.publishedAt,
+                                    id= article.source!!.id,
+                                    name = article.source.name,
+                                    title = article.title,
+                                    url = article.url,
+                                    urlToImage = article.urlToImage
+
+                                ))
+                            }) {
                             Column {
                                 if (article.urlToImage.isNullOrBlank()) {
                                 Image(painter = painterResource(R.drawable.ic_launcher_foreground), contentDescription = null)
